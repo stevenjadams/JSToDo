@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8"><title>JS Training</title>
+</head>
+
+<body>
+	<p id="myPar">Text</p>
+	<script>
+
+		var head = document.getElementsByTagName('head')[0];
+		var script = document.createElement('script');
+		script.type = 'text/javascript';
+		script.src = 'ga-experiment.js';
+		script.async = true;
+		head.appendChild(script);
+
+	</script>
+</body>
+
+</html>
