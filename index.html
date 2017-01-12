@@ -2,20 +2,39 @@
 <html lang="en">
 <head>
 	<meta charset="utf-8"><title>JS Training</title>
+	<style>
+		#inputEnterItem { width: 300px; };
+	</style>
 </head>
-
 <body>
-	<p id="myPar">Text</p>
+
+	<input type="text" id="inputEnterItem" placeholder="Enter your first task item." autofocus="on">
+	<button type="button" id="btnSave">Save</button>
+	
+	<h1>Task List</h1>
+	<ul id="taskList">
+		<!-- First Item -->
+	</ul>
+	
 	<script>
-
-		var head = document.getElementsByTagName('head')[0];
-		var script = document.createElement('script');
-		script.type = 'text/javascript';
-		script.src = 'ga-experiment.js';
-		script.async = true;
-		head.appendChild(script);
-
+		var inputInitialField = document.getElementById("inputEnterItem");
+		var buttonSave = document.getElementById("btnSave");
+		var ulTaskList = document.getElementById("taskList");
+		var taskList = [];
+		function saveTask() {
+			if (inputInitialField.value !== "") {
+				taskList.push(inputInitialField.value); // Store value in array, possibly for future reference
+				
+				//localStorage.lastname = "Smith";
+				
+				var ulTaskListItem = document.createElement("li"); // Creates <li>
+				var ulTaskListItemValue = document.createTextNode(inputInitialField.value); // Creates variable for text entered
+				ulTaskListItem.appendChild(ulTaskListItemValue); //Appends value to <li>
+				ulTaskList.appendChild(ulTaskListItem); // Appends <li> and text to bottom of <ul>
+			}
+		}
+		buttonSave.addEventListener("click", saveTask);
 	</script>
+	
 </body>
-
 </html>
