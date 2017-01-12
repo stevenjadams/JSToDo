@@ -1,26 +1,31 @@
 <!doctype html>
 <html lang="en">
 <head>
-	<meta charset="utf-8"><title>JS Training</title>
+	<meta charset="utf-8">
+	<title>JS Training</title>
 	<style>
-		#inputEnterItem { width: 300px; };
+		body { background: #666; color: #444; font-family: "Segoe UI" }
+		div { background: #FFF; border-radius: 10px; width:500px; margin: 50px auto; padding: 30px; }
+		input { width: 421px; border:1px solid #CCC; padding:8px 10px; }
+		button { padding:6px; }
+		hr { height:1px; margin-top:50px; }
 	</style>
 </head>
 <body>
 
-	<input type="text" id="inputEnterItem" placeholder="Enter your first task item." autofocus="on">
-	<button type="button" id="btnSave">Save</button>
-	
-	<h1>Task List</h1>
-	<ul id="taskList">
-		<!-- First Item -->
-	</ul>
+	<div>
+		<input type="text" id="inputEnterItem" placeholder="Enter your first task item." autofocus="on">
+		<button type="button" id="btnSave">Save</button>
+		<hr>
+		<h1>Task List</h1>
+		<ul id="taskList">
+		</ul>
+	</div>
 	
 	<script>
 		var inputInitialField = document.getElementById("inputEnterItem");
 		var buttonSave = document.getElementById("btnSave");
 		var ulTaskList = document.getElementById("taskList");
-		
 		var taskListItemId = "";
 		// Set position to zero if local storage is empty
 		if (localStorage.length <= 1) {
@@ -31,31 +36,42 @@
 			taskListItemId = localStorage["list.place"];
 		}
 		
+		// Load task list from local storage and update DOM
 		function loadListItems() {
-			for (var i = 0; i < localStorage.length; i++){
+			for (var i = 0; i < localStorage.length - 1; i++){
 				var ulTaskListItem = document.createElement("li"); // Creates <li>
-				var ulTaskListItemValue = document.createTextNode(localStorage.getItem(localStorage.key(i))); // Creates variable for text entered
-				ulTaskListItem.appendChild(ulTaskListItemValue); //Appends value to <li>
+				var ulTaskListItemValue = document.createTextNode(localStorage[localStorage.key(i)]); // Creates variable for text entered
+				ulTaskListItem.setAttribute("id", "listitem-");
+				ulTaskListItem.appendChild(ulTaskListItemValue); // Appends value to <li>
 				ulTaskList.appendChild(ulTaskListItem); // Appends <li> and text to bottom of <ul>
 			}
 		}
 		loadListItems();
 		
+		// Update local storage and DOM with new task item
 		function saveTask() {
 			if (inputInitialField.value !== "") {
 				// Storage
-				localStorage["list.item."+taskListItemId] = inputInitialField.value; // Store value in local storage for future reference.
+				localStorage["list.item." + taskListItemId] = inputInitialField.value; // Store value in local storage for future reference.
 				taskListItemId++; // Create increment unique key each time an item is added.
 				localStorage["list.place"] = taskListItemId; // Store value in local storage for future reference.
 								
 				// Updating DOM
 				var ulTaskListItem = document.createElement("li"); // Creates <li>
 				var ulTaskListItemValue = document.createTextNode(inputInitialField.value); // Creates variable for text entered
-				ulTaskListItem.appendChild(ulTaskListItemValue); //Appends value to <li>
+				ulTaskListItem.appendChild(ulTaskListItemValue); // Appends value to <li>
 				ulTaskList.appendChild(ulTaskListItem); // Appends <li> and text to bottom of <ul>
+				inputInitialField.value = "";
 			}
 		}
 		buttonSave.addEventListener("click", saveTask);
+		
+		// Remove item from local storage and DOM
+		function removeTask() {
+			// Get unique ID of thing that was clicked.
+			// Remove thing from DOM
+			// Remove thing from localStorage
+		}
 	</script>
 	
 </body>
