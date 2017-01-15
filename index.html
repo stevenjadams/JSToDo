@@ -23,38 +23,40 @@
 	</div>
 	
 	<script>
+		// DOM elements
 		var inputInitialField = document.getElementById("inputEnterItem");
 		var buttonSave = document.getElementById("btnSave");
 		var ulTaskList = document.getElementById("taskList");
-		var taskListItemId = "";
-		// Set position to zero if local storage is empty
-		if (localStorage.length <= 1) {
-			taskListItemId = 0;
+		
+		// Create array for task list if localStorage is empty
+		if (JSON.parse(localStorage.getItem("taskList")) === null) {
+			var taskList = [];
 		}
-		// Set position to the last place
+		// Create array for task list and populate with items from localStorage
 		else {
-			taskListItemId = localStorage["list.place"];
+			var taskList = JSON.parse(localStorage.getItem("taskList"));
 		}
 		
 		// Load task list from local storage and update DOM
-		function loadListItems() {
-			for (var i = 0; i < localStorage.length - 1; i++){
-				var ulTaskListItem = document.createElement("li"); // Creates <li>
-				var ulTaskListItemValue = document.createTextNode(localStorage[localStorage.key(i)]); // Creates variable for text entered
-				ulTaskListItem.setAttribute("id", "listitem-");
-				ulTaskListItem.appendChild(ulTaskListItemValue); // Appends value to <li>
-				ulTaskList.appendChild(ulTaskListItem); // Appends <li> and text to bottom of <ul>
+		if (taskList.length > 0) {
+			function loadListItems() {
+				for (var i = 0; i <= taskList.length - 1; i++){
+					var ulTaskListItem = document.createElement("li"); // Creates <li>
+					var ulTaskListItemValue = document.createTextNode(taskList[i]); // Creates variable for text entered
+					ulTaskListItem.setAttribute("id", "listitem" + taskList.indexOf(i));
+					ulTaskListItem.appendChild(ulTaskListItemValue); // Appends value to <li>
+					ulTaskList.appendChild(ulTaskListItem); // Appends <li> and text to bottom of <ul>
+				}
 			}
+			loadListItems();
 		}
-		loadListItems();
 		
 		// Update local storage and DOM with new task item
 		function saveTask() {
 			if (inputInitialField.value !== "") {
 				// Storage
-				localStorage["list.item." + taskListItemId] = inputInitialField.value; // Store value in local storage for future reference.
-				taskListItemId++; // Create increment unique key each time an item is added.
-				localStorage["list.place"] = taskListItemId; // Store value in local storage for future reference.
+				taskList.push(inputInitialField.value); // Update array with user value
+				localStorage.setItem("taskList", JSON.stringify(taskList)); // Update localStorage with array
 								
 				// Updating DOM
 				var ulTaskListItem = document.createElement("li"); // Creates <li>
