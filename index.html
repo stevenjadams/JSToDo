@@ -69,12 +69,12 @@
 				ulTaskList.appendChild(ulTaskListItem); // Appends <li> and text to bottom of <ul>
 				inputInitialField.value = ""; // Remove value from input field
 				inputInitialField.focus();
-				removeTask();
+				removeTask(); // Run remove task function to add the onclick event
 			}
 		}
 		buttonSave.addEventListener("click", saveTask);
 
-		// Remove item from screen and local storage on click of item
+		// Remove item from screen and localStorage on click of item
 		function removeTask() {
 			var ulTaskListChildren = ulTaskList.getElementsByTagName("li"); // Gets all the <li>s in the list
 			for (var i = 0; i < ulTaskListChildren.length; i++) { // Loops through <li>s in list
