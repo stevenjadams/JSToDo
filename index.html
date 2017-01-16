@@ -4,28 +4,30 @@
 	<meta charset="utf-8">
 	<title>JS Training</title>
 	<style>
-		body { background: #666; color: #444; font-family: "Segoe UI" }
-		div { background: #FFF; border-radius: 10px; width:500px; margin: 50px auto; padding: 30px; }
-		input { width: 421px; border:1px solid #CCC; padding:8px 10px; }
-		button { padding:6px; }
-		hr { height:1px; margin-top:50px; }
+		body { background-color: #2c3e50; color: #444; font-family: "Segoe UI" }
+		.container { background: #FFF; border-radius: 10px; width: 500px; margin: 50px auto; padding: 30px; }
+		input { width: 386px; border:1px solid #CCC; padding:10px 10px; }
+		button { padding:10px 8px; background-color: #3498db; border:0 none transparent; border-radius: 3px; color: #FFF; font-weight: bold; -webkit-box-shadow: 0px 2px 2px 0px rgba(0,0,0,0.15); -moz-box-shadow: 0px 2px 2px 0px rgba(0,0,0,0.15); box-shadow: 0px 2px 2px 0px rgba(0,0,0,0.15); cursor: pointer; }
+		#task-list { margin-top:50px; border-top: 1px solid #DDD; display: none;}
 	</style>
 </head>
 <body>
 
-	<div>
+	<div class="container">
 		<input type="text" id="inputEnterItem" placeholder="Enter your first task item." autofocus="on">
-		<button type="button" id="btnSave">Save</button>
-		<hr>
-		<h1>Task List</h1>
-		<ul id="taskList">
-		</ul>
+		<button type="button" id="btnSave">Save Task</button>
+		<div id="task-list">
+			<h1>Task List</h1>
+			<ol id="taskList">
+			</ol>
+		</div>
 	</div>
 	
 	<script>
 		// DOM elements
 		var inputInitialField = document.getElementById("inputEnterItem");
 		var buttonSave = document.getElementById("btnSave");
+		var taskListContainer = document.getElementById("task-list");
 		var ulTaskList = document.getElementById("taskList");
 		
 		// Create array for task list if localStorage is empty
@@ -35,6 +37,7 @@
 		// Create array for task list and populate with items from localStorage
 		else {
 			var taskList = JSON.parse(localStorage.getItem("taskList"));
+			taskListContainer.style.display = "block";
 		}
 		
 		// Load task list from local storage and update DOM
@@ -43,7 +46,7 @@
 				for (var i = 0; i <= taskList.length - 1; i++){
 					var ulTaskListItem = document.createElement("li"); // Creates <li>
 					var ulTaskListItemValue = document.createTextNode(taskList[i]); // Creates variable for text entered
-					ulTaskListItem.setAttribute("id", "listitem" + taskList.indexOf(i));
+					ulTaskListItem.setAttribute("id", "listitem-" + (i));
 					ulTaskListItem.appendChild(ulTaskListItemValue); // Appends value to <li>
 					ulTaskList.appendChild(ulTaskListItem); // Appends <li> and text to bottom of <ul>
 				}
@@ -62,18 +65,32 @@
 				var ulTaskListItem = document.createElement("li"); // Creates <li>
 				var ulTaskListItemValue = document.createTextNode(inputInitialField.value); // Creates variable for text entered
 				ulTaskListItem.appendChild(ulTaskListItemValue); // Appends value to <li>
+				taskListContainer.style.display = "block"; // Set list container to be visible once first item is added
 				ulTaskList.appendChild(ulTaskListItem); // Appends <li> and text to bottom of <ul>
-				inputInitialField.value = "";
+				inputInitialField.value = ""; // Remove value from input field
+				inputInitialField.focus();
+				removeTask();
 			}
 		}
 		buttonSave.addEventListener("click", saveTask);
-		
-		// Remove item from local storage and DOM
+
+		// Remove item from screen and local storage on click of item
 		function removeTask() {
-			// Get unique ID of thing that was clicked.
-			// Remove thing from DOM
-			// Remove thing from localStorage
+			var ulTaskListChildren = ulTaskList.getElementsByTagName("li"); // Gets all the <li>s in the list
+			for (var i = 0; i < ulTaskListChildren.length; i++) { // Loops through <li>s in list
+				ulTaskListChildren[i].onclick = function() { // Assigns an onClick to each <li>
+					this.parentNode.removeChild(this); // Remove the <li> that is clicked
+					var indexOfItemToRemove = taskList.indexOf(this.innerHTML); // Store the index of the item to be removed in a var
+					taskList.splice(indexOfItemToRemove, 1);
+					localStorage.setItem("taskList", JSON.stringify(taskList)); // Update localStorage with array
+					if (taskList.length === 0) {
+						localStorage.clear();
+						taskListContainer.style.display = "none"; // Hide list container if array is empty
+					}
+				}
+			}
 		}
+		removeTask()
 	</script>
 	
 </body>
