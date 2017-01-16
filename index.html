@@ -5,11 +5,21 @@
 	<title>JS Training</title>
 	<style>
 		body { background-color: #2c3e50; color: #444; font-family: "Segoe UI" }
-		.container { background: #FFF; border-radius: 10px; width: 500px; margin: 50px auto; padding: 30px; }
+		.container { background: #FFF; border-radius: 10px; width: 500px; margin: 100px auto; padding: 30px; }
 		input { width: 386px; border:1px solid #CCC; padding:10px 10px; }
-		button { padding:10px 8px; background-color: #3498db; border:0 none transparent; border-radius: 3px; color: #FFF; font-weight: bold; -webkit-box-shadow: 0px 2px 2px 0px rgba(0,0,0,0.15); -moz-box-shadow: 0px 2px 2px 0px rgba(0,0,0,0.15); box-shadow: 0px 2px 2px 0px rgba(0,0,0,0.15); cursor: pointer; }
-		#task-list { margin-top:50px; border-top: 1px solid #DDD; display: none;}
+		button { padding:10px 8px; background-color: #16a085; border:0 none transparent; border-radius: 3px; color: #FFF; font-weight: bold; -webkit-box-shadow: 0px 2px 2px
+		0px rgba(0,0,0,0.15); -moz-box-shadow: 0px 2px 2px 0px rgba(0,0,0,0.15); box-shadow: 0px 2px 2px 0px rgba(0,0,0,0.15); cursor: pointer; transition: all 200ms ease; }
+		button:hover, button:active, button:focus { background-color: #1abc9c; }
+		#task-list { margin-top:50px; border-top: 1px solid #EEE; display: none; }
+		#task-list h1 { font-weight: normal; }
+		#task-list ul { list-style-type: none; padding: 0; margin: 0; }
+		#task-list li { padding: 10px; background-color: #EEE; border-bottom: 1px solid #DDD; margin-bottom: 10px; }
+		#task-list li:last-child { margin: 0; }
+		#task-list i { float: right; cursor: pointer; margin-top: 5px; }
 	</style>
+	<!-- Font Awesome -->
+	<link href="lib/font-awesome-4.6.3/css/font-awesome.min.css" rel="stylesheet">
+	<!-- <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous"> -->
 </head>
 <body>
 
@@ -18,8 +28,8 @@
 		<button type="button" id="btnSave">Save Task</button>
 		<div id="task-list">
 			<h1>Task List</h1>
-			<ol id="taskList">
-			</ol>
+			<ul id="taskList">
+			</ul>
 		</div>
 	</div>
 	
@@ -40,15 +50,20 @@
 			taskListContainer.style.display = "block";
 		}
 		
-		// Load task list from local storage and update DOM
+		// Load task list from taskList array and update DOM
 		if (taskList.length > 0) {
 			function loadListItems() {
 				for (var i = 0; i <= taskList.length - 1; i++){
+					// Add new <li>
 					var ulTaskListItem = document.createElement("li"); // Creates <li>
 					var ulTaskListItemValue = document.createTextNode(taskList[i]); // Creates variable for text entered
-					ulTaskListItem.setAttribute("id", "listitem-" + (i));
 					ulTaskListItem.appendChild(ulTaskListItemValue); // Appends value to <li>
 					ulTaskList.appendChild(ulTaskListItem); // Appends <li> and text to bottom of <ul>
+					
+					// Add remove icon
+					var iconRemove = document.createElement("i");
+					iconRemove.setAttribute("class", "fa fa-lg fa-trash");
+					ulTaskListItem.appendChild(iconRemove); // Appends icon to <li>
 				}
 			}
 			loadListItems();
@@ -62,11 +77,18 @@
 				localStorage.setItem("taskList", JSON.stringify(taskList)); // Update localStorage with array
 								
 				// Updating DOM
+				// -- Add new <li>
 				var ulTaskListItem = document.createElement("li"); // Creates <li>
 				var ulTaskListItemValue = document.createTextNode(inputInitialField.value); // Creates variable for text entered
 				ulTaskListItem.appendChild(ulTaskListItemValue); // Appends value to <li>
-				taskListContainer.style.display = "block"; // Set list container to be visible once first item is added
+				ulTaskListItem.appendChild(iconRemove); // Appends icon to <li>
+				
+				// -- Add remove icon
+				var iconRemove = document.createElement("i");
+				iconRemove.setAttribute("class", "fa fa-lg fa-trash");
 				ulTaskList.appendChild(ulTaskListItem); // Appends <li> and text to bottom of <ul>
+				
+				taskListContainer.style.display = "block"; // Set list container to be visible once first item is added
 				inputInitialField.value = ""; // Remove value from input field
 				inputInitialField.focus(); // Set focus back to field
 				removeTask(); // Run remove task function to add the onclick event
@@ -76,10 +98,10 @@
 
 		// Remove item from screen and localStorage on click of item
 		function removeTask() {
-			var ulTaskListChildren = ulTaskList.getElementsByTagName("li"); // Gets all the <li>s in the list
-			for (var i = 0; i < ulTaskListChildren.length; i++) { // Loops through <li>s in list
-				ulTaskListChildren[i].onclick = function() { // Assigns an onClick to each <li>
-					this.parentNode.removeChild(this); // Remove the <li> that is clicked
+			var ulTaskListRemoveIcons = ulTaskList.getElementsByTagName("i"); // Gets all the <li>s in the list
+			for (var i = 0; i < ulTaskListRemoveIcons.length; i++) { // Loops through <li>s in list
+				ulTaskListRemoveIcons[i].onclick = function() { // Assigns an onClick to each <li>
+					this.parentNode.remove(); // Remove the <li> that is clicked
 					var indexOfItemToRemove = taskList.indexOf(this.innerHTML); // Store the index of the item to be removed in a var
 					taskList.splice(indexOfItemToRemove, 1);
 					localStorage.setItem("taskList", JSON.stringify(taskList)); // Update localStorage with array
