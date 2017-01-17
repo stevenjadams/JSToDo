@@ -2,11 +2,13 @@
 <html lang="en">
 <head>
 	<meta charset="utf-8">
-	<title>JS Training</title>
+	<title>JS Training - To-Do List</title>
 	<style>
 		body { background-color: #2c3e50; color: #444; font-family: "Segoe UI" }
 		.container { background: #FFF; border-radius: 10px; width: 500px; margin: 100px auto; padding: 30px; }
-		input { width: 386px; border:1px solid #CCC; padding:10px 10px; }
+		input { width: 386px; border: 1px solid #CCC; padding:10px 10px; }
+		input:hover { border: 1px solid #888; box-shadow: 0px 2px 2px 0px rgba(0,0,0,0.15); }
+		input:focus { border: 1px solid #1abc9c; box-shadow: 0px 2px 2px 0px rgba(0,0,0,0.15); }
 		button { padding:10px 8px; background-color: #16a085; border:0 none transparent; border-radius: 3px; color: #FFF; font-weight: bold; -webkit-box-shadow: 0px 2px 2px
 		0px rgba(0,0,0,0.15); -moz-box-shadow: 0px 2px 2px 0px rgba(0,0,0,0.15); box-shadow: 0px 2px 2px 0px rgba(0,0,0,0.15); cursor: pointer; transition: all 200ms ease; }
 		button:hover, button:active, button:focus { background-color: #1abc9c; }
@@ -15,12 +17,13 @@
 		#task-list ul { list-style-type: none; padding: 0; margin: 0; }
 		#task-list li { padding: 10px; background-color: #EEE; border-bottom: 1px solid #DDD; margin-bottom: 10px; }
 		#task-list li:last-child { margin: 0; }
-		#task-list i { color: #16a085; float: right; cursor: pointer; margin-top: 5px; transition: all 200ms ease; }
+		#task-list i { color: #16a085; float: right; cursor: pointer; margin: 5px 0 0 10px; transition: all 200ms ease; }
 		#task-list i:hover, #task-list i:active, #task-list i:focus { color: #1abc9c; }
+		
+		#task-list li.indent { margin-left: 20px; }
 	</style>
 	<!-- Font Awesome -->
 	<link href="lib/font-awesome-4.6.3/css/font-awesome.min.css" rel="stylesheet">
-	<!-- <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous"> -->
 </head>
 <body>
 
@@ -54,7 +57,7 @@
 		// Load task list from taskList array and update DOM
 		if (taskList.length > 0) {
 			function loadListItems() {
-				for (var i = 0; i <= taskList.length - 1; i++){
+				for (var i = 0; i < taskList.length; i++){
 					// Add new <li>
 					var ulTaskListItem = document.createElement("li"); // Creates <li>
 					var ulTaskListItemValue = document.createTextNode(taskList[i]); // Creates variable for text entered
@@ -62,9 +65,14 @@
 					ulTaskList.appendChild(ulTaskListItem); // Appends <li> and text to bottom of <ul>
 					
 					// Add remove icon
-					var iconRemove = document.createElement("i");
-					iconRemove.setAttribute("class", "fa fa-lg fa-trash");
+					var iconRemove = document.createElement("i"); // Creates delete icon
+					iconRemove.setAttribute("class", "fa fa-lg fa-trash"); // Adds the classes to the delete icon
 					ulTaskListItem.appendChild(iconRemove); // Appends icon to <li>
+				
+					// -- Add indent icon
+					var iconIndent = document.createElement("i"); // Creates delete icon
+					iconIndent.setAttribute("class", "fa fa-lg fa-indent"); // Adds the classes to the delete icon
+					ulTaskListItem.appendChild(iconIndent); // Appends icon to <li>
 				}
 			}
 			loadListItems();
@@ -82,29 +90,35 @@
 				var ulTaskListItem = document.createElement("li"); // Creates <li>
 				var ulTaskListItemValue = document.createTextNode(inputInitialField.value); // Creates variable for text entered
 				ulTaskListItem.appendChild(ulTaskListItemValue); // Appends value to <li>
-				ulTaskListItem.appendChild(iconRemove); // Appends icon to <li>
+				ulTaskList.appendChild(ulTaskListItem); // Appends <li> and text to bottom of <ul>
 				
 				// -- Add remove icon
-				var iconRemove = document.createElement("i");
-				iconRemove.setAttribute("class", "fa fa-lg fa-trash");
-				ulTaskList.appendChild(ulTaskListItem); // Appends <li> and text to bottom of <ul>
+				var iconRemove = document.createElement("i"); // Creates delete icon
+				iconRemove.setAttribute("class", "fa fa-lg fa-trash"); // Adds the classes to the delete icon
+				ulTaskListItem.appendChild(iconRemove); // Appends icon to <li>
+				
+				// -- Add indent icon
+				var iconIndent = document.createElement("i"); // Creates delete icon
+				iconIndent.setAttribute("class", "fa fa-lg fa-indent"); // Adds the classes to the delete icon
+				ulTaskListItem.appendChild(iconIndent); // Appends icon to <li>
 				
 				taskListContainer.style.display = "block"; // Set list container to be visible once first item is added
 				inputInitialField.value = ""; // Remove value from input field
 				inputInitialField.focus(); // Set focus back to field
 				removeTask(); // Run remove task function to add the onclick event
+				indentTask() // Run indent task function to add the onclick event
 			}
 		}
 		buttonSave.addEventListener("click", saveTask);
 
 		// Remove item from screen and localStorage on click of item
 		function removeTask() {
-			var ulTaskListRemoveIcons = ulTaskList.getElementsByTagName("i"); // Gets all the <li>s in the list
+			var ulTaskListRemoveIcons = ulTaskList.getElementsByClassName("fa-trash"); // Gets all the <li>s in the list
 			for (var i = 0; i < ulTaskListRemoveIcons.length; i++) { // Loops through <li>s in list
 				ulTaskListRemoveIcons[i].onclick = function() { // Assigns an onClick to each <li>
 					this.parentNode.remove(); // Remove the <li> that is clicked
 					var indexOfItemToRemove = taskList.indexOf(this.innerHTML); // Store the index of the item to be removed in a var
-					taskList.splice(indexOfItemToRemove, 1);
+					taskList.splice(indexOfItemToRemove, 1); // Removes item from array
 					localStorage.setItem("taskList", JSON.stringify(taskList)); // Update localStorage with array
 					if (taskList.length === 0) {
 						localStorage.clear();
@@ -114,6 +128,23 @@
 			}
 		}
 		removeTask()
+		
+		// Nest list items
+		function indentTask() {
+			var ulTaskListIndentIcons = ulTaskList.getElementsByClassName("fa-indent");
+			for (var i = 0; i < ulTaskListIndentIcons.length; i++) {
+				ulTaskListIndentIcons[i].onclick = function() {
+					this.parentNode.className = "indent";
+				}
+			}
+		}
+		indentTask()
+		
+		// I want to be able to edit list items
+		
+		// I want to be able to color-code list items
+		
+		// I want to be able to reorder list items
 	</script>
 	
 </body>
