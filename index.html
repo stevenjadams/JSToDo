@@ -57,23 +57,7 @@
 		// Load task list from taskList array and update DOM
 		if (taskList.length > 0) {
 			function loadListItems() {
-				for (var i = 0; i < taskList.length; i++){
-					// Add new <li>
-					var ulTaskListItem = document.createElement("li"); // Creates <li>
-					var ulTaskListItemValue = document.createTextNode(taskList[i]); // Creates variable for text entered
-					ulTaskListItem.appendChild(ulTaskListItemValue); // Appends value to <li>
-					ulTaskList.appendChild(ulTaskListItem); // Appends <li> and text to bottom of <ul>
-					
-					// Add remove icon
-					var iconRemove = document.createElement("i"); // Creates delete icon
-					iconRemove.setAttribute("class", "fa fa-lg fa-trash"); // Adds the classes to the delete icon
-					ulTaskListItem.appendChild(iconRemove); // Appends icon to <li>
-				
-					// -- Add indent icon
-					var iconIndent = document.createElement("i"); // Creates delete icon
-					iconIndent.setAttribute("class", "fa fa-lg fa-indent"); // Adds the classes to the delete icon
-					ulTaskListItem.appendChild(iconIndent); // Appends icon to <li>
-				}
+				ulTaskList.innerHTML = taskList[0];
 			}
 			loadListItems();
 		}
@@ -82,8 +66,8 @@
 		function saveTask() {
 			if (inputInitialField.value !== "") {
 				// Storage
-				taskList.push(inputInitialField.value); // Update array with user value
-				localStorage.setItem("taskList", JSON.stringify(taskList)); // Update localStorage with array
+				//taskList.push(inputInitialField.value); // Update array with user value
+				//localStorage.setItem("taskList", JSON.stringify(taskList)); // Update localStorage with array
 								
 				// Updating DOM
 				// -- Add new <li>
@@ -102,6 +86,9 @@
 				iconIndent.setAttribute("class", "fa fa-lg fa-indent"); // Adds the classes to the delete icon
 				ulTaskListItem.appendChild(iconIndent); // Appends icon to <li>
 				
+				taskList.unshift(ulTaskList.innerHTML); // Update array <li>s
+				localStorage.setItem("taskList", JSON.stringify(taskList)); // Update localStorage with array
+				
 				taskListContainer.style.display = "block"; // Set list container to be visible once first item is added
 				inputInitialField.value = ""; // Remove value from input field
 				inputInitialField.focus(); // Set focus back to field
@@ -117,10 +104,9 @@
 			for (var i = 0; i < ulTaskListRemoveIcons.length; i++) { // Loops through <li>s in list
 				ulTaskListRemoveIcons[i].onclick = function() { // Assigns an onClick to each <li>
 					this.parentNode.remove(); // Remove the <li> that is clicked
-					var indexOfItemToRemove = taskList.indexOf(this.innerHTML); // Store the index of the item to be removed in a var
-					taskList.splice(indexOfItemToRemove, 1); // Removes item from array
-					localStorage.setItem("taskList", JSON.stringify(taskList)); // Update localStorage with array
-					if (taskList.length === 0) {
+					taskList.unshift(ulTaskList.innerHTML); // Update array <li>s
+					localStorage.setItem("taskList", JSON.stringify(taskList)); // Update localStorage with array					
+					if (ulTaskList.getElementsByTagName("li").length === 0) {
 						localStorage.clear();
 						taskListContainer.style.display = "none"; // Hide list container if array is empty
 					}
@@ -135,6 +121,8 @@
 			for (var i = 0; i < ulTaskListIndentIcons.length; i++) {
 				ulTaskListIndentIcons[i].onclick = function() {
 					this.parentNode.className = "indent";
+					taskList.unshift(ulTaskList.innerHTML); // Update array <li>s
+					localStorage.setItem("taskList", JSON.stringify(taskList)); // Update localStorage with array
 				}
 			}
 		}
