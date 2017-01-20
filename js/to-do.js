@@ -56,6 +56,12 @@ function saveTask() {
 		iconIndent.setAttribute("title", "Toggle indentation"); // Adds the a title
 		ulTaskListItem.appendChild(iconIndent); // Appends icon to <li>
 		
+		// -- Add move icon
+		var iconMove = document.createElement("i"); // Creates delete icon
+		iconMove.setAttribute("class", "fa fa-lg fa-arrows-v"); // Adds the classes to the delete icon
+		iconMove.setAttribute("title", "Move item"); // Adds the a title
+		ulTaskListItem.appendChild(iconMove); // Appends icon to <li>
+		
 		// Storage
 		taskList.unshift(ulTaskList.innerHTML); // Update array <li>s
 		localStorage.setItem("taskList", JSON.stringify(taskList)); // Update localStorage with array
@@ -140,7 +146,7 @@ ulTaskList.addEventListener('keydown', function (event) {
 function highLightTask() {
 	var ulTaskListHighlightIcons = ulTaskList.getElementsByClassName("fa-star-o");
 	for (var i = 0; i < ulTaskListHighlightIcons.length; i++) {
-		ulTaskListHighlightIcons[i].onclick = function() {
+		ulTaskListHighlightIcons[i].onclick = function () {
 			if (this.parentNode.className === "indent") {
 				this.parentNode.className += " highlight";
 			}
@@ -161,3 +167,13 @@ function highLightTask() {
 highLightTask()
 
 // I want to be able to reorder list items
+function moveItem() {
+	var ulTaskListItems = ulTaskList.getElementsByClassName("fa-arrows-v");
+	for (var i = 0; i < ulTaskListItems.length; i++) {
+		ulTaskListItems[i].onclick = function () {
+			var currentParent = this.parentNode.outerHTML;
+			var nextItem = this.parentNode.nextSibling;
+		}
+	}
+}
+moveItem();

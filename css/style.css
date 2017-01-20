@@ -16,6 +16,7 @@ button:hover, button:active, button:focus { background-color: #1abc9c; }
 #task-list i.fa-trash { right:20px; }
 #task-list i.fa-star-o { right:53px; }
 #task-list i.fa-indent { right:92px; }
+#task-list i.fa-arrows-v { right:134px; }
 #task-list li.indent { margin-left: 20px; border-left: 1px solid #bdc3c7; }
 #task-list li.highlight { background-color: #ffe788; border-bottom:1px solid #e8d27c; }
 #task-list li span { padding: 10px 120px 10px 10px; min-height: 43px; display: block; transition: all 200ms ease; }
