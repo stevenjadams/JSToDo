@@ -1,5 +1,5 @@
 body { background-color: #34495e; color: #444; font-family: "Segoe UI" }
-.container { background: #FFF; border-radius: 10px; max-width: 600px; margin: 100px auto; padding: 30px; -webkit-box-shadow: 0px 4px 4px
+.container { background: #FFF; border-radius: 10px; max-width: 700px; margin: 100px auto; padding: 30px; -webkit-box-shadow: 0px 4px 4px
 0px rgba(0,0,0,0.40); -moz-box-shadow: 0px 4px 4px 0px rgba(0,0,0,0.40); box-shadow: 0px 4px 4px 0px rgba(0,0,0,0.40); }
 input { width: 75%; border: 1px solid #bdc3c7; padding:10px 10px; transition: all 200ms ease; }
 input:hover { border: 1px solid #888; box-shadow: 0px 2px 2px 0px rgba(0,0,0,0.15); }
@@ -16,13 +16,14 @@ button:hover, button:active, button:focus { background-color: #1abc9c; }
 #task-list i.fa-trash { right:20px; }
 #task-list i.fa-star-o { right:53px; }
 #task-list i.fa-indent { right:92px; }
-#task-list i.fa-arrows-v { right:134px; }
+#task-list i.fa-angle-up { right:134px; }
+#task-list i.fa-angle-down { right:164px; }
 #task-list li.indent { margin-left: 20px; border-left: 1px solid #bdc3c7; }
 #task-list li.highlight { background-color: #ffe788; border-bottom:1px solid #e8d27c; }
-#task-list li span { padding: 10px 120px 10px 10px; min-height: 43px; display: block; transition: all 200ms ease; }
+#task-list li span { padding: 10px 190px 10px 10px; min-height: 43px; display: block; transition: all 200ms ease; }
 #task-list li span:hover:after { content: ' - Click to edit'; font-style: italic; font-size: 12px; color: #c0392b; }
 #task-list li span:hover { background-color: #f1f5f6; }
-#task-list li span:focus { padding: 10px 120px 10px 15px; background-color: #FFF; }
+#task-list li span:focus { padding: 10px 190px 10px 15px; background-color: #FFF; }
 #task-list li span:focus:after { content: ' - Enter to save'; font-style: italic; font-size: 12px; color: #c0392b; }
 
 #task-list li.highlight span:hover, #task-list li.highlight span:focus { background: #fff1bb; }
